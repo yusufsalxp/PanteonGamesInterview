@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace api.Controllers;
 
@@ -37,5 +38,13 @@ public class AuthController : ControllerBase
             Username = user.UserName!,
         };
 
+    }
+
+
+    [HttpGet]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public async Task<UserResponseDto> Me()
+    {
+        return null;
     }
 }
