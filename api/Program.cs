@@ -1,6 +1,7 @@
 using System.Text;
 using api.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,6 +30,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddDbContext<UserDbContext>(opt => opt.UseInMemoryDatabase("Users"));
+builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+.AddDefaultTokenProviders()
+.AddEntityFrameworkStores<UserDbContext>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

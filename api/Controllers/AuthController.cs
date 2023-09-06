@@ -5,6 +5,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using api.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.ObjectPool;
 
 namespace api.Controllers;
 
@@ -12,68 +14,35 @@ namespace api.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly IConfiguration _config;
+    private readonly IAuthService _authService;
 
-    public static List<User> Users = new()
-            {
-                    new User(){ Username="griyum",Password="test",Email="griyum@gmail.com"}
-            };
-    public AuthController(IConfiguration config)
+    public AuthController(
+        IAuthService authService
+        )
     {
-        _config = config;
+        _authService = authService;
     }
 
     [AllowAnonymous]
     [HttpPost]
-    public ActionResult Login([FromBody] UserLogin userLogin)
+    public async Task<string> Login([FromBody] UserLoginDto dto)
     {
-        var user = Authenticate(userLogin);
-        if (user != null)
-        {
-            var token = GenerateToken(user);
-            return Ok(token);
-        }
-
-        return NotFound("user not found");
+        return await _authService.Login(dto);
     }
 
 
     [AllowAnonymous]
     [HttpPost]
-    public ActionResult Register([FromBody] UserLogin userLogin)
+    public async Task<UserResponseDto> Register([FromBody] UserRegisterDto dto)
     {
-        return NotFound("user not found");
-    }
+        var user = await _authService.Register(dto);
 
-    // To generate token
-    private string GenerateToken(User user)
-    {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-        var claims = new[]
+
+        return new UserResponseDto()
         {
-                new Claim(ClaimTypes.NameIdentifier,user.Username),
-            };
-        var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-            _config["Jwt:Audience"],
-            claims,
-            expires: DateTime.Now.AddMinutes(15),
-            signingCredentials: credentials);
+            Id = user.Id,
+            Username = user.UserName!,
+        };
 
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
-
-    }
-
-    //To authenticate user
-    private User? Authenticate(UserLogin userLogin)
-    {
-        var currentUser = Users.FirstOrDefault(x => x.Username.ToLower() ==
-            userLogin.Username.ToLower() && x.Password == userLogin.Password);
-        if (currentUser != null)
-        {
-            return currentUser;
-        }
-        return null;
     }
 }
