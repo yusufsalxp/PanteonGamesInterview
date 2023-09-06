@@ -29,7 +29,7 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddDbContext<UserDbContext>(opt => opt.UseInMemoryDatabase("Users"));
+builder.Services.AddDbContext<UserDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User, IdentityRole<Guid>>()
 .AddDefaultTokenProviders()
 .AddEntityFrameworkStores<UserDbContext>();
