@@ -6,7 +6,8 @@ namespace api.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Produces("application/json")]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class BuildingsConfigurationController : ControllerBase
 {
     private readonly IBuildingsConfigurationService _buildingsConfigurationService;
