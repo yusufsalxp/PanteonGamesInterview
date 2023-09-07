@@ -1,20 +1,90 @@
-import { AuthPage, ThemedTitleV2 } from "@refinedev/antd";
-import { AppIcon } from "../../components/app-icon";
+import { useLogin } from "@refinedev/core";
+import {
+  Layout as AntdLayout,
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Row,
+  Typography,
+} from "antd";
+import React from "react";
+import "./styles.css";
 
-export const Login = () => {
+const { Text, Title } = Typography;
+
+export interface ILoginForm {
+  username: string;
+  password: string;
+}
+
+export const Login: React.FC = () => {
+  const [form] = Form.useForm<ILoginForm>();
+
+  const { mutate: login } = useLogin<ILoginForm>();
+
+  const CardTitle = (
+    <Title level={3} className="title">
+      Sign in your account
+    </Title>
+  );
+
   return (
-    <AuthPage
-      type="login"
-      title={
-        <ThemedTitleV2
-          collapsed={false}
-          text="refine Project"
-          icon={<AppIcon />}
-        />
-      }
-      formProps={{
-        initialValues: { email: "demo@refine.dev", password: "demodemo" },
-      }}
-    />
+    <AntdLayout className="layout">
+      <Row
+        justify="center"
+        align="middle"
+        style={{
+          height: "100vh",
+        }}
+      >
+        <Col xs={22}>
+          <div className="container">
+            <Card title={CardTitle} headStyle={{ borderBottom: 0 }}>
+              <Form<ILoginForm>
+                layout="vertical"
+                form={form}
+                onFinish={(values) => {
+                  login(values);
+                }}
+                requiredMark={false}
+                initialValues={{
+                  username: "string",
+                  password: "String2.",
+                }}
+              >
+                <Form.Item
+                  name="username"
+                  label="Username"
+                  rules={[{ required: true }]}
+                >
+                  <Input size="large" placeholder="Username" />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  label="Password"
+                  rules={[{ required: true }]}
+                  style={{ marginBottom: "12px" }}
+                >
+                  <Input type="password" placeholder="●●●●●●●●" size="large" />
+                </Form.Item>
+                <Button type="primary" size="large" htmlType="submit" block>
+                  Sign in
+                </Button>
+              </Form>
+              <div style={{ marginTop: 8 }}>
+                <Text style={{ fontSize: 12 }}>
+                  Don’t have an account?{" "}
+                  <a href="/register" style={{ fontWeight: "bold" }}>
+                    Sign up
+                  </a>
+                </Text>
+              </div>
+            </Card>
+          </div>
+        </Col>
+      </Row>
+    </AntdLayout>
   );
 };
