@@ -4,7 +4,7 @@ public class BuildingsConfiguration
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    public ObjectId Id { get; set; }
     public BuildingType Type { get; set; }
     public decimal BuildingCost { get; set; }
     public int ConstructionTime { get; set; }

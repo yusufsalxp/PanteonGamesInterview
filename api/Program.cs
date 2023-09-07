@@ -12,7 +12,7 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-
+        builder.Services.AddAutoMapper(typeof(Program));
         builder.Services.Configure<BuildingsConfigurationsDatabaseSettings>(
             builder.Configuration.GetSection("BuildingsConfigurationDatabase"));
 

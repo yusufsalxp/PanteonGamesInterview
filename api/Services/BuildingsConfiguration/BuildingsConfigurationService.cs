@@ -1,12 +1,17 @@
+using AutoMapper;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 public class BuildingsConfigurationService : IBuildingsConfigurationService
 {
     private readonly IMongoCollection<BuildingsConfiguration> _buildingsConfigurationCollection;
+    private readonly IMapper _mapper;
 
     public BuildingsConfigurationService(
-        IOptions<BuildingsConfigurationsDatabaseSettings> buildingsConfigurationsDatabaseSettings)
+        IOptions<BuildingsConfigurationsDatabaseSettings> buildingsConfigurationsDatabaseSettings,
+        IMapper mapper
+    )
     {
         var mongoClient = new MongoClient(
             buildingsConfigurationsDatabaseSettings.Value.ConnectionString);
@@ -16,20 +21,62 @@ public class BuildingsConfigurationService : IBuildingsConfigurationService
 
         _buildingsConfigurationCollection = mongoDatabase.GetCollection<BuildingsConfiguration>(
             buildingsConfigurationsDatabaseSettings.Value.BooksCollectionName);
+
+        _mapper = mapper;
     }
 
-    public async Task<List<BuildingsConfiguration>> GetAsync() =>
-        await _buildingsConfigurationCollection.Find(_ => true).ToListAsync();
+    public async Task<List<BuildingsConfiguration>> GetAll()
+    {
+        var result = await _buildingsConfigurationCollection.Find(_ => true).ToListAsync();
+        return result;
+    }
 
-    public async Task<BuildingsConfiguration?> GetAsync(string id) =>
-        await _buildingsConfigurationCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<BuildingsConfiguration?> GetById(string id)
+    {
+        return await _buildingsConfigurationCollection.Find(x => x.Id == new ObjectId(id)).FirstOrDefaultAsync();
+    }
 
-    public async Task CreateAsync(BuildingsConfiguration newBuildingsConfiguration) =>
-        await _buildingsConfigurationCollection.InsertOneAsync(newBuildingsConfiguration);
+    public async Task<BuildingsConfiguration> Create(BuildingsConfigurationCreateDto dto)
+    {
+        var model = _mapper.Map<BuildingsConfiguration>(dto);
+        await _buildingsConfigurationCollection.InsertOneAsync(model);
 
-    public async Task UpdateAsync(string id, BuildingsConfiguration updatedBuildingsConfiguration) =>
-        await _buildingsConfigurationCollection.ReplaceOneAsync(x => x.Id == id, updatedBuildingsConfiguration);
+        return model;
+    }
 
-    public async Task RemoveAsync(string id) =>
-        await _buildingsConfigurationCollection.DeleteOneAsync(x => x.Id == id);
+    public async Task<BuildingsConfiguration> Update(string id, BuildingsConfigurationUpdateDto dto)
+    {
+        var model = await GetById(id);
+
+        if (model == null)
+        {
+            throw new Exception("There is no model!");
+        }
+
+        if (dto.Type != null)
+        {
+            model.Type = (BuildingType)dto.Type;
+        }
+
+
+        if (dto.BuildingCost != null)
+        {
+            model.BuildingCost = (decimal)dto.BuildingCost;
+        }
+
+
+        if (dto.ConstructionTime != null)
+        {
+            model.ConstructionTime = (int)dto.ConstructionTime;
+        }
+
+        await _buildingsConfigurationCollection.ReplaceOneAsync(x => x.Id == model.Id, model);
+
+        return model;
+    }
+
+    public async Task Delete(string id)
+    {
+        await _buildingsConfigurationCollection.DeleteOneAsync(x => x.Id == new ObjectId(id));
+    }
 }
