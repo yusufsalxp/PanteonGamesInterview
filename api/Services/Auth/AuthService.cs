@@ -48,6 +48,10 @@ public class AuthService : IAuthService
 
     }
 
+    public async Task<User?> GetById(Guid id)
+    {
+        return await _userManager.FindByIdAsync(id.ToString());
+    }
 
     public async Task<User> Register(UserRegisterDto dto)
     {
@@ -79,8 +83,7 @@ public class AuthService : IAuthService
     {
         var claims = new List<Claim>
             {
-               new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-               new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+               new Claim("id", user.Id.ToString())
             };
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         var _TokenExpiryTimeInHour = Convert.ToInt64(_configuration["Jwt:TokenExpiryTimeInHour"]);

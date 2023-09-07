@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MongoDB.Bson;
 
 namespace api.Controllers;
 
@@ -19,7 +20,7 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<string> Login([FromBody] UserLoginDto dto)
+    public async Task<ActionResult<string>> Login([FromBody] UserLoginDto dto)
     {
         return await _authService.Login(dto);
     }
@@ -27,14 +28,14 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<UserResponseDto> Register([FromBody] UserRegisterDto dto)
+    public async Task<ActionResult<UserResponseDto>> Register([FromBody] UserRegisterDto dto)
     {
         var user = await _authService.Register(dto);
 
 
-        return new UserResponseDto()
+        return new UserResponseDto
         {
-            Id = user.Id,
+            Id = user.Id.ToString(),
             Username = user.UserName!,
         };
 
@@ -43,8 +44,24 @@ public class AuthController : ControllerBase
 
     [HttpGet]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public async Task<UserResponseDto> Me()
+    public async Task<ActionResult<UserResponseDto>> Me()
     {
-        return null;
+        var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "id")?.Value;
+
+        if (userId != null)
+        {
+            var user = await _authService.GetById(Guid.Parse(userId));
+            if (user != null)
+            {
+                var response = new UserResponseDto
+                {
+                    Id = user.Id.ToString(),
+                    Username = user.UserName!,
+                };
+                return Ok(response);
+            }
+        }
+
+        return BadRequest();
     }
 }

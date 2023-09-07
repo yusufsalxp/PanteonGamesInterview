@@ -1,3 +1,4 @@
+using System.Security.Principal;
 using System.Text;
 using api.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,11 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+
+        builder.Services.Configure<BuildingsConfigurationsDatabaseSettings>(
+            builder.Configuration.GetSection("BuildingsConfigurationDatabase"));
+
         builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -30,8 +36,10 @@ internal class Program
             };
         });
         builder.Services.AddAuthorization();
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddTransient<IPrincipal>(provider => provider.GetService<IHttpContextAccessor>()!.HttpContext!.User);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddNewtonsoftJson();
         builder.Services.AddDbContext<UserDbContext>(
             opt => opt.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection")
@@ -41,7 +49,9 @@ internal class Program
             .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<UserDbContext>();
 
+        builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IBuildingsConfigurationService, BuildingsConfigurationService>();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

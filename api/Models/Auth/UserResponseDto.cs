@@ -1,5 +1,6 @@
+[Serializable]
 public class UserResponseDto
 {
-    public required Guid Id;
-    public required string Username;
+    public string Id = "";
+    public string Username = "";
 }
