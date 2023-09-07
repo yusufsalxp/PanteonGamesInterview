@@ -38,7 +38,8 @@
     "dev": "refine dev",
     "build": "tsc && refine build",
     "preview": "refine start",
-    "refine": "refine"
+    "refine": "refine",
+    "generate": "npx swagger-typescript-api -p ./assets/swagger.json -o ./src/core -n api.ts"
   },
   "browserslist": {
     "production": [
