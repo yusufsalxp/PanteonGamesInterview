@@ -116,6 +116,7 @@ internal class Program
         app.MapControllers();
 
         app.UseCors(MyAllowSpecificOrigins);
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.Run();
     }

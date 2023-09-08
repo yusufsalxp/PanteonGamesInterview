@@ -25,7 +25,7 @@ public class AuthService : IAuthService
 
     public async Task<string> Login(UserLoginDto dto)
     {
-        var user = await _userManager.FindByEmailAsync(dto.Username);
+        var user = await _userManager.FindByNameAsync(dto.Username);
 
         if (user != null)
         {
@@ -37,7 +37,7 @@ public class AuthService : IAuthService
             }
             else
             {
-                throw new Exception("Some errors has been occured!");
+                throw new Exception("Your Password Doesn't Match!");
             }
 
         }
@@ -59,7 +59,23 @@ public class AuthService : IAuthService
         {
             UserName = dto.Username,
             Email = dto.Email,
+
         };
+
+
+        var isUserWithSameMailExist = (await _userManager.FindByEmailAsync(dto.Email)) != null;
+
+        if (isUserWithSameMailExist)
+        {
+            throw new Exception("There is already an user with same mail address!");
+        }
+
+        var isUserWithSameNameExist = (await _userManager.FindByNameAsync(dto.Username)) != null;
+
+        if (isUserWithSameNameExist)
+        {
+            throw new Exception("There is already an user with same username!");
+        }
 
         var result = await _userManager.CreateAsync(user, dto.Password);
 

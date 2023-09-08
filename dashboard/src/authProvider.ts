@@ -6,17 +6,21 @@ export const TOKEN_KEY = "refine-auth";
 
 export const authProvider: AuthBindings = {
   login: async ({ username, password }) => {
+    let err = { Message: "", validation: [] };
     if (username && password) {
-      let loginResult = await apiManager.auth.loginCreate({
-        username,
-        password,
-      });
-      if (loginResult.status == 200) {
+      try {
+        let loginResult = await apiManager.auth.loginCreate({
+          username,
+          password,
+        });
         localStorage.setItem(TOKEN_KEY, loginResult.data.token!);
+
         return {
           success: true,
           redirectTo: "/",
         };
+      } catch (e: any) {
+        err = e.error;
       }
     }
 
@@ -24,11 +28,12 @@ export const authProvider: AuthBindings = {
       success: false,
       error: {
         name: "LoginError",
-        message: "Invalid username or password",
+        message: err.Message,
       },
     };
   },
   register: async ({ username, password, email, passwordConfirm }) => {
+    let err = { Message: "" };
     if (password != passwordConfirm) {
       return {
         success: false,
@@ -40,23 +45,25 @@ export const authProvider: AuthBindings = {
     }
 
     if (username && email && password) {
-      let result = await apiManager.auth.registerCreate({
-        username,
-        password,
-        email,
-      });
-      if (result.status == 200) {
+      try {
+        let result = await apiManager.auth.registerCreate({
+          username,
+          password,
+          email,
+        });
         return {
           success: true,
           redirectTo: "/",
         };
+      } catch (e: any) {
+        err = e.error;
       }
 
       return {
         success: false,
         error: {
           name: "Register Error",
-          message: JSON.stringify(result.data),
+          message: err.Message,
         },
       };
     }
