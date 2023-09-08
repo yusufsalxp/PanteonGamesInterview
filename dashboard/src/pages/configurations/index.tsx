@@ -24,6 +24,7 @@ export const BuildingsConfigurationList: React.FC<
 > = () => {
   const { tableProps } = useTable<BuildingsConfiguration>();
   const { modalProps, show, close } = useModal();
+  modalProps.width = 300;
 
   const CreateModal = () => {
     const { mutate: create } = useCreate();
@@ -51,7 +52,7 @@ export const BuildingsConfigurationList: React.FC<
             close();
           }}
         >
-          <Title level={4} style={{ textAlign: "center" }}>
+          <Title level={4} style={{ textAlign: "center", paddingBottom: 8 }}>
             Create
           </Title>
           <Form.Item
@@ -66,14 +67,14 @@ export const BuildingsConfigurationList: React.FC<
             label="Building Time"
             rules={[{ required: true, min: 30, max: 1800, type: "number" }]}
           >
-            <InputNumber size="large" />
+            <InputNumber size="large" style={{ width: 145 }} />
           </Form.Item>
           <Form.Item
             name="buildingCost"
             label="Building Cost"
             rules={[{ required: true, min: 0.1, type: "number" }]}
           >
-            <InputNumber size="large" />
+            <InputNumber size="large" style={{ width: 145 }} />
           </Form.Item>
         </Form>
       </Modal>
