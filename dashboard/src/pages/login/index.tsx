@@ -25,8 +25,8 @@ export const Login: React.FC = () => {
   const { mutate: login } = useLogin<ILoginForm>();
 
   const CardTitle = (
-    <Title level={3} className="title">
-      Sign in your account
+    <Title level={3} className="title" style={{ marginTop: 16 }}>
+      Login
     </Title>
   );
 

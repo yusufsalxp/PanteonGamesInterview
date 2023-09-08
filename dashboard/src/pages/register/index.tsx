@@ -27,8 +27,8 @@ export const Register: React.FC = () => {
   const { mutate: Register } = useRegister<IRegisterForm>();
 
   const CardTitle = (
-    <Title level={3} className="title">
-      Sign up
+    <Title level={3} className="title" style={{ marginTop: 16 }}>
+      Register
     </Title>
   );
 
