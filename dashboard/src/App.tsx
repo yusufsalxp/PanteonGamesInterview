@@ -23,6 +23,7 @@ import { authProvider } from "./authProvider";
 import { AppIcon } from "./components/app-icon";
 import { Header } from "./components/header";
 import { ColorModeContextProvider } from "./contexts/color-mode";
+import { BuildingsConfigurationList } from "./pages/configurations";
 import { Login } from "./pages/login";
 import { Register } from "./pages/register";
 
@@ -40,12 +41,21 @@ function App() {
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <Refine
-            dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
+            dataProvider={dataProvider("http://localhost:5079")}
             notificationProvider={notificationProvider}
             authProvider={authProvider}
             i18nProvider={i18nProvider}
             routerProvider={routerBindings}
-            resources={[]}
+            resources={[
+              {
+                name: "buildingsconfiguration",
+                list: BuildingsConfigurationList,
+                identifier: "Configuration",
+                meta: {
+                  label: "Configurations",
+                },
+              },
+            ]}
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
@@ -74,7 +84,13 @@ function App() {
               >
                 <Route
                   index
-                  element={<NavigateToResource resource="blog_posts" />}
+                  element={
+                    <NavigateToResource resource="buildingsconfiguration" />
+                  }
+                />
+                <Route
+                  path="buildingsconfiguration"
+                  element={<BuildingsConfigurationList />}
                 />
                 <Route path="*" element={<ErrorComponent />} />
               </Route>

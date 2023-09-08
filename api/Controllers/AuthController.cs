@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MongoDB.Bson;
 
 namespace api.Controllers;
 
@@ -24,6 +23,7 @@ public class AuthController : ControllerBase
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] UserLoginDto dto)
     {
         var token = await _authService.Login(dto);
+
         return new LoginResponseDto()
         {
             Token = token
