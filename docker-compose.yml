@@ -1,14 +1,6 @@
-version: '3.7'
+version: "3.7"
 
 services:
-  sqldata:
-    image: mcr.microsoft.com/mssql/server:2017-latest
-    environment:
-      - SA_PASSWORD=${SQL_PASSWORD}
-      - ACCEPT_EULA=Y
-    ports:
-      - "${SQL_PORT}:1433"
-
   mongodb:
     image: mongo:latest
     environment:
@@ -16,3 +8,34 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
     ports:
       - ${MONGODB_PORT}:27017
+
+  dashboard:
+    build: ./dashboard
+    ports:
+      - "4173:4173"
+    depends_on:
+      - api
+
+  api:
+    build: ./api
+    ports:
+      - "5079:5079"
+    depends_on:
+      - sqldata
+      - mongodb
+      - migrations
+
+  migrations:
+    build:
+      context: ./api
+      dockerfile: Migrations.Dockerfile
+
+  sqldata:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment:
+      - SA_PASSWORD=${SQL_PASSWORD}
+      - ACCEPT_EULA=Y
+    ports:
+      - "${SQL_PORT}:1433"
+    depends_on:
+      - migrations
