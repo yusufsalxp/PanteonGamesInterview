@@ -37,7 +37,7 @@
   "scripts": {
     "dev": "refine dev",
     "build": "tsc && refine build",
-    "preview": "refine start",
+    "preview": "refine start --host",
     "refine": "refine",
     "generate": "npx swagger-typescript-api -p ./assets/swagger.json -o ./src/core -n api.ts"
   },
