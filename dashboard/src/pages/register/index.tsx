@@ -81,7 +81,22 @@ export const Register: React.FC = () => {
                 <Form.Item
                   name="password"
                   label="Password"
-                  rules={[{ required: true }]}
+                  rules={[
+                    { required: true },
+                    {
+                      validator: (_, value, callback) => {
+                        const regex =
+                          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+                        if (regex.test(value)) {
+                          callback();
+                        } else {
+                          callback(
+                            "Password should contain at least one Alpha Case, Numeric value and Special character!"
+                          );
+                        }
+                      },
+                    },
+                  ]}
                 >
                   <Input type="password" placeholder="●●●●●●●●" size="large" />
                 </Form.Item>
