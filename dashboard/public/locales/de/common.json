@@ -140,21 +140,21 @@
     }
   },
   "documentTitle": {
-    "default": "refine",
-    "suffix": " | refine",
+    "default": "Panteon",
+    "suffix": " | Panteon",
     "blog_posts": {
-      "list": "Blogbeiträge | refine",
-      "show": "#{{id}} Show Blogeintrag | refine",
-      "edit": "#{{id}} Edit Blogeintrag | refine",
-      "create": "Create new Blogeintrag | refine",
-      "clone": "#{{id}} Clone Blogeintrag | refine"
+      "list": "Blogbeiträge | Panteon",
+      "show": "#{{id}} Show Blogeintrag | Panteon",
+      "edit": "#{{id}} Edit Blogeintrag | Panteon",
+      "create": "Create new Blogeintrag | Panteon",
+      "clone": "#{{id}} Clone Blogeintrag | Panteon"
     },
     "categories": {
-      "list": "Kategorien | refine",
-      "show": "#{{id}} Zeigen Kategorien | refine",
-      "edit": "#{{id}} Bearbeiten Kategorien | refine",
-      "create": "Neue Kategorie Erstellen | refine",
-      "clone": "#{{id}} Klon Kategorie | refine"
+      "list": "Kategorien | Panteon",
+      "show": "#{{id}} Zeigen Kategorien | Panteon",
+      "edit": "#{{id}} Bearbeiten Kategorien | Panteon",
+      "create": "Neue Kategorie Erstellen | Panteon",
+      "clone": "#{{id}} Klon Kategorie | Panteon"
     }
   },
   "table": {
