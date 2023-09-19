@@ -41,7 +41,7 @@ function App() {
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <Refine
-            dataProvider={dataProvider("http://localhost:5079")}
+            dataProvider={dataProvider("http://panteonapi.yusufsal.com")}
             notificationProvider={notificationProvider}
             authProvider={authProvider}
             i18nProvider={i18nProvider}

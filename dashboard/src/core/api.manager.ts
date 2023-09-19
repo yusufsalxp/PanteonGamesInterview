@@ -1,3 +1,5 @@
 import { Api } from "./api";
 
-export const apiManager = new Api({ baseUrl: "http://localhost:5079" });
+export const apiManager = new Api({
+  baseUrl: "http://panteonapi.yusufsal.com",
+});
