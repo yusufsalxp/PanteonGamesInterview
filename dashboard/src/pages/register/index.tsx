@@ -52,10 +52,10 @@ export const Register: React.FC = () => {
                 }}
                 requiredMark={false}
                 initialValues={{
-                  username: "string",
-                  email: "string@gmail.com",
-                  password: "String2.",
-                  passwordConfirm: "String2.",
+                  username: "",
+                  email: "",
+                  password: "",
+                  passwordConfirm: "",
                 }}
               >
                 <Form.Item

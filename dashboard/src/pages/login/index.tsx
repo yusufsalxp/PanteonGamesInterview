@@ -50,8 +50,8 @@ export const Login: React.FC = () => {
                 }}
                 requiredMark={false}
                 initialValues={{
-                  username: "string",
-                  password: "String2.",
+                  username: "",
+                  password: "",
                 }}
               >
                 <Form.Item
