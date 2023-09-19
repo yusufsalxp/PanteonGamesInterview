@@ -8,8 +8,6 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "${SQL_PORT}:1433"
-    depends_on:
-      - migrations
 
   mongodb:
     image: mongo:latest
@@ -18,8 +16,3 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
     ports:
       - ${MONGODB_PORT}:27017
-
-  migrations:
-    build:
-      context: ./api
-      dockerfile: Migrations.Dockerfile

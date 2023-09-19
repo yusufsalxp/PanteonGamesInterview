@@ -8,8 +8,6 @@ services:
       - ACCEPT_EULA=Y
     ports:
       - "${SQL_PORT}:1433"
-    depends_on:
-      - migrations
 
   mongodb:
     image: mongo:latest
